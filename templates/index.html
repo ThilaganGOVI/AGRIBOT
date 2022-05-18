@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agri-Bot</title>
+<style>
+  .input-file-container {
+  position: relative;
+  width: 225px;
+} 
+.js .input-file-trigger {
+  display: block;
+  padding: 14px 45px;
+  background: #39D2B4;
+  color: #fff;
+  font-size: 1em;
+  transition: all .4s;
+  cursor: pointer;
+}
+.js .input-file {
+  position: absolute;
+  top: 0; left: 0;
+  width: 225px;
+  opacity: 0;
+  padding: 14px 0;
+  cursor: pointer;
+}
+.js .input-file:hover + .input-file-trigger,
+.js .input-file:focus + .input-file-trigger,
+.js .input-file-trigger:hover,
+.js .input-file-trigger:focus {
+  background: #34495E;
+  color: #39D2B4;
+}
+input[type=submit]{
+
+  display: block;
+  padding: 14px 55px;
+  background: #39D2B4;
+  color: #fff;
+  font-size: 1em;
+  margin-top: 25px;
+  margin-bottom: 100px;
+  margin-right: 200px;
+  margin-left: 0px;
+  transition: all .4s;
+  cursor: pointer;
+
+}
+.file-return {
+  margin: 0;
+}
+.file-return:not(:empty) {
+  margin: 1em 0;
+}
+.js .file-return {
+  font-style: italic;
+  font-size: .9em;
+  font-weight: bold;
+}
+.js .file-return:not(:empty):before {
+  content: "Selected file: ";
+  font-style: normal;
+  font-weight: normal;
+}
+
+body {
+  font-family: Arial;
+  color: white;
+}
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  background-color: grey;
+}
+
+.right {
+  right: 0;
+  background-color: #111;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}
+
+p {
+  color: white;
+  text-indent: 50px;
+  font-family: bold;
+}
+
+/* Useless styles, just for demo styles */
+
+body {
+  font-family: "Open sans", "Segoe UI", "Segoe WP", Helvetica, Arial, sans-serif;
+  color: #7F8C9A;
+  background: #FCFDFD;
+}
+h1, h2 {
+  margin-bottom: 5px;
+  font-weight: normal;
+  text-align: center;
+  color:#aaa;
+}
+h2 {
+  margin: 5px 0 2em;
+  color: #1ABC9C;
+}
+form {
+  width: 225px;
+  margin: 0 auto;
+  text-align:center;
+}
+h2 + P {
+  text-align: center;
+}
+.txtcenter {
+  margin-top: 4em;
+  font-size: .9em;
+  text-align: center;
+  color: #aaa;
+}
+.copy {
+  margin-top: 2em;
+}
+.copy a {
+  text-decoration: none;
+  color: #1ABC9C;
+}
+.file-upload-content{
+  display: none;
+}
+</style>
+<script>
+  document.querySelector("html").classList.add('js');
+  
+  var fileInput  = document.querySelector( ".input-file" ),  
+      button     = document.querySelector( ".input-file-trigger" ),
+      the_return = document.querySelector(".file-return");
+        
+  button.addEventListener( "keydown", function( event ) {  
+      if ( event.keyCode == 13 || event.keyCode == 32 ) {  
+          fileInput.focus();  
+      }  
+  });
+  button.addEventListener( "click", function( event ) {
+     fileInput.focus();
+     return false;
+  });  
+  fileInput.addEventListener( "change", function( event ) {  
+      the_return.innerHTML = this.value;  
+  }); 
+
+  function readURL(input) {
+  if (input.files && input.files[0]) {
+
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      $('.image-upload-wrap').hide();
+
+      $('.file-upload-image').attr('src', e.target.result);
+      $('.file-upload-content').show();
+
+      $('.image-title').html(input.files[0].name);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+
+  } else {
+    removeUpload();
+  }
+}
+
+function removeUpload() {
+  $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+  $('.file-upload-content').hide();
+  $('.image-upload-wrap').show();
+}
+$('.image-upload-wrap').bind('dragover', function () {
+    $('.image-upload-wrap').addClass('image-dropping');
+  });
+  $('.image-upload-wrap').bind('dragleave', function () {
+    $('.image-upload-wrap').removeClass('image-dropping');
+});
+  </script>
+</head>
+<script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+<body>
+<div class="split left">
+    <center><h1><b>AGRI-BOT</b></h1></center>
+   <div class="centered">
+    <form action="/gettypeofdisease" method="POST" enctype="multipart/form-data">
+      <div class="input-file-container">  
+        <input class="input-file" id="my-file" name="file" type="file" onchange="readURL(this);" accept="image/*">
+        <label tabindex="0" for="my-file" class="input-file-trigger" >Select Image</label>
+      </div>
+      <br>
+      <div class="file-upload-content">
+        <img class="file-upload-image" src="#" alt="your image" />
+      </div>
+      <div class="input-file-container"> 
+      <input type="submit" name="predict" value="predict Disease" />
+      </div>
+    </form>
+
+    <p >   {{ msge }} </p>
+   </div> 
+</div>
+
+
+<div class="split right">
+     <div class="centered">
+      <iframe width="500" height="620" allow="microphone;" src="https://console.dialogflow.com/api-client/demo/embedded/9e5a6713-5dbb-43ec-9632-51706f11ab0e"></iframe>
+  </div>
+</div>
+     
+</body>
+</html> 
